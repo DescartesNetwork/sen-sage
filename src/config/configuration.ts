@@ -1,4 +1,5 @@
 import ip from 'ip'
+import { CronExpression } from '@nestjs/schedule'
 
 const env = process.env.NODE_ENV || 'development'
 const configuration = () => ({
@@ -21,6 +22,12 @@ const configuration = () => ({
       env === 'development'
         ? 'https://ssc-dao.genesysgo.net/'
         : 'https://sparkling-compatible-telescope.solana-mainnet.quiknode.pro/7585a9ee75601c03a2815eeb8a018c05fa10e736/',
+  },
+  schedule: {
+    jupag:
+      env === 'development'
+        ? CronExpression.EVERY_MINUTE
+        : CronExpression.EVERY_10_MINUTES,
   },
 })
 

@@ -17,8 +17,8 @@ async function bootstrap() {
     credentials: true,
   })
   app.use(cookieParser())
-  app.use(morgan('tiny'))
-  app.useGlobalPipes(new ValidationPipe({ whitelist: true }))
+  app.use(morgan('dev'))
+  app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }))
   // Swagger docs
   const { version, description, name } = JSON.parse(
     fs.readFileSync(path.resolve(__dirname, '../package.json'), 'utf8'),

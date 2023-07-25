@@ -11,7 +11,7 @@
   "scripts": {
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
-    "start": "concurrently --names DEV,LINT -c cyan,yellow \"yarn lint\" \"yarn start:dev\"",
+    "start": "concurrently --names LINT,DEV -c yellow,cyan \"yarn lint\" \"yarn start:dev\"",
     "start:dev": "NODE_ENV=development nest start --watch",
     "start:debug": "NODE_ENV=development nest start --debug --watch",
     "start:prod": "NODE_ENV=production node dist/main",
@@ -25,7 +25,14 @@
   "engines": {
     "node": ">=16 <=18"
   },
+  "resolutions": {
+    "@solana/buffer-layout": "^4.0.1"
+  },
   "dependencies": {
+    "@coral-xyz/anchor": "^0.28.0",
+    "@coral-xyz/spl-token": "^0.28.0",
+    "@metaplex-foundation/js": "^0.18.3",
+    "@nestjs/cache-manager": "^2.1.0",
     "@nestjs/common": "^9.0.0",
     "@nestjs/config": "^3.0.0",
     "@nestjs/core": "^9.0.0",
@@ -33,19 +40,24 @@
     "@nestjs/schedule": "^3.0.1",
     "@nestjs/swagger": "^7.1.2",
     "@nestjs/throttler": "^4.2.1",
+    "@solana/web3.js": "^1.78.0",
+    "axios": "^1.4.0",
+    "cache-manager": "^5.2.3",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.0",
     "cookie-parser": "^1.4.6",
     "ip": "^1.1.8",
     "morgan": "^1.10.0",
     "reflect-metadata": "^0.1.13",
-    "rxjs": "^7.2.0"
+    "rxjs": "^7.2.0",
+    "sharp": "^0.32.4"
   },
   "devDependencies": {
     "@nestjs/cli": "^9.0.0",
     "@nestjs/schematics": "^9.0.0",
     "@nestjs/testing": "^9.0.0",
     "@types/cookie-parser": "^1.4.3",
+    "@types/cron": "^2.0.1",
     "@types/express": "^4.17.13",
     "@types/ip": "^1.1.0",
     "@types/jest": "29.2.4",
