@@ -1,3 +1,5 @@
+import fs from 'fs'
+import path from 'path'
 import { ValidationPipe } from '@nestjs/common'
 import { NestFactory } from '@nestjs/core'
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger'
@@ -18,7 +20,9 @@ async function bootstrap() {
   app.use(morgan('tiny'))
   app.useGlobalPipes(new ValidationPipe({ whitelist: true }))
   // Swagger docs
-  const { version, description, name } = await import('../package.json')
+  const { version, description, name } = JSON.parse(
+    fs.readFileSync(path.resolve(__dirname, '../package.json'), 'utf8'),
+  )
   const config = new DocumentBuilder()
     .setTitle(name)
     .setDescription(description)
