@@ -8,6 +8,7 @@ import { MplModule } from './mpl/mpl.module'
 import { SplModule } from './spl/spl.module'
 import { HealthModule } from './health/health.module'
 import { MetadataModule } from './metadata/metadata.module'
+import { PriceModule } from './price/price.module'
 import configuration from 'config/configuration'
 
 @Module({
@@ -22,6 +23,7 @@ import configuration from 'config/configuration'
     SplModule.forRoot({ isGlobal: true }),
     HealthModule,
     MetadataModule,
+    PriceModule,
   ],
   controllers: [],
   providers: [],

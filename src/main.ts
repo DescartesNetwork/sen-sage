@@ -17,7 +17,11 @@ async function bootstrap() {
     credentials: true,
   })
   app.use(cookieParser())
-  app.use(morgan('dev'))
+  app.use(
+    morgan('tiny', {
+      skip: ({ url }) => url === '/health',
+    }),
+  )
   app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }))
   // Swagger docs
   const { version, description, name } = JSON.parse(

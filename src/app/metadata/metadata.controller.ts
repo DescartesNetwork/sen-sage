@@ -8,7 +8,7 @@ export class MetadataController {
   constructor(private readonly service: MetadataService) {}
 
   @Get(':mintAddress')
-  async getTokenMetadata(
+  async getMintMetadata(
     @Param('mintAddress', ParseSolanaAddressPipe) mintAddress: string,
     @Query() { atomicAddresses }: GetMetadataDto,
   ) {
