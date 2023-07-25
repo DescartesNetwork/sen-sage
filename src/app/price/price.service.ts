@@ -1,8 +1,12 @@
-import { Injectable } from '@nestjs/common'
+import { CACHE_MANAGER } from '@nestjs/cache-manager'
+import { Inject, Injectable } from '@nestjs/common'
 import axios from 'axios'
+import { Cache } from 'cache-manager'
 
 @Injectable()
 export class PriceService {
+  constructor(@Inject(CACHE_MANAGER) private cache: Cache) {}
+
   private async getPriceViaJupiter(mintAddress: string) {
     try {
       const {
@@ -23,9 +27,16 @@ export class PriceService {
 
   async getPricetByMintAddress(
     mintAddress: string,
-    { atomicAddresses = [] }: { atomicAddresses?: string[] },
+    {
+      atomicAddresses = [],
+      weights = [],
+    }: { atomicAddresses?: string[]; weights?: number[] },
   ) {
+    console.log(atomicAddresses, weights)
+    const local = await this.cache.get(mintAddress)
+    if (local) return local
     const price = await this.getPriceViaJupiter(mintAddress)
+    await this.cache.set(mintAddress, price)
     return price
   }
 }

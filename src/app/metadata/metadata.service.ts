@@ -89,13 +89,14 @@ export class MetadataService {
     mintAddress: string,
     { atomicAddresses = [] }: { atomicAddresses?: string[] },
   ) {
+    console.log(atomicAddresses)
     const local = await this.cache.get(mintAddress)
     if (local) return local
     const mint =
       (await this.getMintViaJupiter(mintAddress)) ||
       (await this.getMintViaMetaplex(mintAddress)) ||
       (await this.getMintViaTokenProgram(mintAddress))
-    await this.cache.set(mint.address, mint)
+    await this.cache.set(mintAddress, mint)
     return mint
   }
 }

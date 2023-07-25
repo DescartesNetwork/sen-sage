@@ -10,10 +10,11 @@ export class PriceController {
   @Get(':mintAddress')
   async getMintPrice(
     @Param('mintAddress', ParseSolanaAddressPipe) mintAddress: string,
-    @Query() { atomicAddresses }: GetPriceDto,
+    @Query() { atomicAddresses, weights }: GetPriceDto,
   ) {
     const price = await this.service.getPricetByMintAddress(mintAddress, {
       atomicAddresses,
+      weights,
     })
     return price
   }
