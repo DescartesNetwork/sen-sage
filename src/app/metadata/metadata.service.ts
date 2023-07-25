@@ -85,7 +85,10 @@ export class MetadataService {
     }
   }
 
-  async getMintByAddress(mintAddress: string) {
+  async getMintByAddress(
+    mintAddress: string,
+    { atomicAddresses = [] }: { atomicAddresses?: string[] },
+  ) {
     const local = await this.cache.get(mintAddress)
     if (local) return local
     const mint =

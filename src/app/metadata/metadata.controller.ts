@@ -12,7 +12,9 @@ export class MetadataController {
     @Param('mintAddress', ParseSolanaAddressPipe) mintAddress: string,
     @Query() { atomicAddresses }: GetMetadataDto,
   ) {
-    const mint = await this.service.getMintByAddress(mintAddress)
-    return { mint, atomicAddresses }
+    const mint = await this.service.getMintByAddress(mintAddress, {
+      atomicAddresses,
+    })
+    return mint
   }
 }
