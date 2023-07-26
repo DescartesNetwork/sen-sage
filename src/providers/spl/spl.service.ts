@@ -9,10 +9,15 @@ import { MintMetadata } from 'providers/jupag/jupag.service'
 import { Cache } from 'cache-manager'
 import { SplToken } from './spl.abi'
 import axios from 'axios'
-import sharp from 'sharp'
+import sharp, { Create } from 'sharp'
 import GIFEncoder from 'gifencoder'
 
-const SIZE = 48
+const FRAME: Create = {
+  width: 48,
+  height: 48,
+  channels: 4,
+  background: { r: 0, g: 0, b: 0, alpha: 0 },
+}
 
 @Injectable()
 export class SplService {
@@ -56,11 +61,17 @@ export class SplService {
             const { data } = await axios.get<Buffer>(url, {
               responseType: 'arraybuffer',
             })
-            const buf = await sharp(data).resize(SIZE, SIZE).raw().toBuffer()
+            const input = await sharp(data)
+              .resize(FRAME.width, FRAME.height)
+              .toBuffer()
+            const buf = await sharp({ create: FRAME })
+              .composite([{ input }])
+              .raw()
+              .toBuffer()
             return buf
           }),
         )
-        const encoder = new GIFEncoder(SIZE, SIZE)
+        const encoder = new GIFEncoder(FRAME.width, FRAME.height)
         const buf = encoder
           .createReadStream()
           .pipe(sharp({ animated: true }).webp({ loop: 0 }))
@@ -75,7 +86,6 @@ export class SplService {
       await this.cache.set(`logo:${mintAddress}`, img)
       return logoURI
     } catch (er) {
-      console.log(er)
       return undefined
     }
   }
