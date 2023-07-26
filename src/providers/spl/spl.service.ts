@@ -12,7 +12,7 @@ import axios from 'axios'
 import sharp from 'sharp'
 import { createGif } from 'sharp-gif2'
 
-const SIZE = 64
+const SIZE = 48
 
 @Injectable()
 export class SplService {
@@ -72,6 +72,7 @@ export class SplService {
       await this.cache.set(`logo:${mintAddress}`, img)
       return logoURI
     } catch (er) {
+      console.log(er)
       return undefined
     }
   }

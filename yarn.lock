@@ -1633,6 +1633,13 @@
     "@types/qs" "*"
     "@types/serve-static" "*"
 
+"@types/gifencoder@^2.0.1":
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/@types/gifencoder/-/gifencoder-2.0.1.tgz#96e83022600e85640338ea76daea5327d84870eb"
+  integrity sha512-Ls78JLiLPHA1ytIXMWv/7/71a2Cz7BBnjgi9R/LFcIS531PEFYxPPGHNmBBnLekQ7/VpO+n1fgaJ6XD3ZkpApg==
+  dependencies:
+    "@types/node" "*"
+
 "@types/graceful-fs@^4.1.3":
   version "4.1.6"
   resolved "https://registry.yarnpkg.com/@types/graceful-fs/-/graceful-fs-4.1.6.tgz#e14b2576a1c25026b7f02ede1de3b84c3a1efeae"
