@@ -12,6 +12,8 @@ import axios from 'axios'
 import sharp from 'sharp'
 import { createGif } from 'sharp-gif2'
 
+const SIZE = 64
+
 @Injectable()
 export class SplService {
   public readonly program: Program<SplToken>
@@ -54,12 +56,12 @@ export class SplService {
             const { data } = await axios.get(url, {
               responseType: 'arraybuffer',
             })
-            return sharp(data).resize(48, 48)
+            return sharp(data).resize(SIZE, SIZE)
           }),
         )
         const gif = await createGif({
-          width: 48,
-          height: 48,
+          width: SIZE,
+          height: SIZE,
           delay: 500,
         })
           .addFrame(frames)
