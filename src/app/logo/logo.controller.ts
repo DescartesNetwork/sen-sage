@@ -18,6 +18,7 @@ export class LogoController {
   @Header('Content-Type', 'image/webp')
   async getLogoByMintAddress(@Param('filename') filename: string) {
     const [mintAddress, ext] = filename.split('.')
+    console.log(mintAddress, ext)
     if (!isAddress(mintAddress) || ext.toLowerCase() !== 'webp')
       throw new HttpException('Bad request', HttpStatus.BAD_REQUEST)
     const data = await this.service.getLogoByMintAddress(mintAddress)
