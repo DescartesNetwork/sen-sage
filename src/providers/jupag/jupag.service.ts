@@ -35,7 +35,11 @@ export class JupagService {
       )
       if (data)
         data.forEach((mint) =>
-          this.cache.set(`metadata:${mint.address}`, mint, 7 * 24 * 60 * 60),
+          this.cache.set(
+            `metadata:${mint.address}`,
+            mint,
+            7 * 24 * 60 * 60 * 1000,
+          ),
         )
       return data.find(({ address }) => address === mintAddress)
     } catch (er) {
@@ -63,7 +67,7 @@ export class JupagService {
         timeTake: number
       }>(`https://price.jup.ag/v4/price?ids=${mintAddress}`)
       if (price !== undefined)
-        this.cache.set(`price:${mintAddress}`, price, 60 * 60)
+        this.cache.set(`price:${mintAddress}`, price, 60 * 60 * 1000)
       return price
     } catch (er) {
       return undefined

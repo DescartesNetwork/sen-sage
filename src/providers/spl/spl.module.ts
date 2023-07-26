@@ -4,7 +4,11 @@ import { CacheModule } from '@nestjs/cache-manager'
 
 @Module({
   imports: [
-    CacheModule.register({ isGlobal: true, ttl: 24 * 60 * 60, max: 100000 }),
+    CacheModule.register({
+      isGlobal: true,
+      ttl: 24 * 60 * 60 * 1000,
+      max: 100000,
+    }),
   ],
   providers: [SplService],
   exports: [SplService],

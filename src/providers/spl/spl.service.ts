@@ -9,6 +9,7 @@ import { MintMetadata } from 'providers/jupag/jupag.service'
 import { Cache } from 'cache-manager'
 import { SplToken } from './spl.abi'
 import axios from 'axios'
+import sharp from 'sharp'
 
 @Injectable()
 export class SplService {
@@ -37,6 +38,58 @@ export class SplService {
     return mint
   }
 
+  private async constructLogoUri(
+    logoURIs: string[],
+    { mintAddress }: { mintAddress: string },
+  ) {
+    try {
+      const logoURI = `${this.config.get('server.host', {
+        infer: true,
+      })}/logo/${mintAddress}.webp`
+      const img =
+        (await this.cache.get<Buffer>(`logo:${mintAddress}`)) ||
+        (await sharp({
+          create: {
+            width: 48,
+            height: 48,
+            channels: 3,
+            background: { r: 255, g: 255, b: 255 },
+          },
+        })
+          .composite(
+            await Promise.all(
+              logoURIs.map(async (url) => {
+                const { data } = await axios.get(url, {
+                  responseType: 'arraybuffer',
+                })
+                const buf = await sharp(data).resize(48, 48).toBuffer()
+                return { input: buf }
+              }),
+            ),
+          )
+          .webp()
+          .toBuffer())
+      await this.cache.set(`logo:${mintAddress}`, img) // Force set to make sure the token logo live longer than the token metadata
+      return logoURI
+    } catch (er) {
+      return undefined
+    }
+  }
+
+  /**
+   * Return image data from cache
+   * @param mintAddress Mint address
+   * @returns Image buffer
+   */
+  async getImageByMintAddress(mintAddress: string) {
+    try {
+      const img = await this.cache.get<Buffer>(`logo:${mintAddress}`)
+      return img
+    } catch (er) {
+      return undefined
+    }
+  }
+
   /**
    * Get mint metadata from SPL program
    * @param mintAddress Mint address
@@ -52,19 +105,21 @@ export class SplService {
       const {
         account: { mints },
       } = await this.balansol.getPoolByLpAddress(mintAddress)
-      const atomicMints = await Promise.all(
+      const atomicMints = await Promise.all<MintMetadata>(
         mints.map((e) => this.recursiveMintByAddress(e.toBase58())),
       )
-      const symbol = atomicMints.length
-        ? atomicMints.map(({ symbol }) => symbol).join(' • ')
-        : mintAddress.substring(0, 6)
+      const symbol = atomicMints.map(({ symbol }) => symbol).join(' • ')
+      const logoURI = await this.constructLogoUri(
+        atomicMints.map(({ logoURI }) => logoURI),
+        { mintAddress },
+      )
       const mint = {
         address: mintAddress,
         chainId: 101,
         decimals: decimals,
         name: 'SenSwap LP Token',
-        symbol,
-        logoURI: '',
+        symbol: symbol || mintAddress.substring(0, 6),
+        logoURI: logoURI || '',
         tags: ['spl'],
         extensions: {},
       }

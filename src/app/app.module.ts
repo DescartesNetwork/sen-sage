@@ -10,6 +10,7 @@ import { JupagModule } from 'providers/jupag/jupag.module'
 import { HealthModule } from './health/health.module'
 import { MetadataModule } from './metadata/metadata.module'
 import { PriceModule } from './price/price.module'
+import { LogoModule } from './logo/logo.module'
 import configuration from 'config/configuration'
 
 @Module({
@@ -25,6 +26,7 @@ import configuration from 'config/configuration'
     MetadataModule,
     PriceModule,
     BalansolModule,
+    LogoModule,
   ],
   controllers: [],
   providers: [],

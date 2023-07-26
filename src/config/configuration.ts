@@ -7,11 +7,7 @@ const configuration = () => ({
     env,
     port: parseInt(process.env.PORT, 10) || 10000,
     ip: ip.address(),
-  },
-  redis: {
-    host: process.env.REDIS_HOST || 'localhost',
-    port: parseInt(process.env.REDIS_PORT, 10) || 6379,
-    ttl: env === 'development' ? 5 : 30,
+    host: process.env.HOST || '',
   },
   throttler: {
     ttl: env === 'development' ? 5 : 24 * 60 * 60,
