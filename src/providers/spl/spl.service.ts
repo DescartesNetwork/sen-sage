@@ -10,7 +10,7 @@ import { Cache } from 'cache-manager'
 import { SplToken } from './spl.abi'
 import axios from 'axios'
 import sharp from 'sharp'
-import { createGif } from 'sharp-gif2'
+import GIFEncoder from 'gifencoder'
 
 const SIZE = 48
 
@@ -51,22 +51,25 @@ export class SplService {
       })}/logo/${mintAddress}.webp`
       let img = await this.cache.get<Buffer>(`logo:${mintAddress}`)
       if (!img) {
-        const frames = await Promise.all(
+        const frames: any[] = await Promise.all(
           logoURIs.map(async (url) => {
-            const { data } = await axios.get(url, {
+            const { data } = await axios.get<Buffer>(url, {
               responseType: 'arraybuffer',
             })
-            return sharp(data).resize(SIZE, SIZE)
+            const buf = await sharp(data).resize(SIZE, SIZE).raw().toBuffer()
+            return buf
           }),
         )
-        const gif = await createGif({
-          width: SIZE,
-          height: SIZE,
-          delay: 500,
-        })
-          .addFrame(frames)
-          .toSharp()
-        img = await gif.webp({ loop: 0 }).toBuffer()
+        const encoder = new GIFEncoder(SIZE, SIZE)
+        const buf = encoder
+          .createReadStream()
+          .pipe(sharp({ animated: true }).webp({ loop: 0 }))
+        encoder.start()
+        encoder.setRepeat(0)
+        encoder.setDelay(500)
+        for (const frame of frames) encoder.addFrame(frame)
+        encoder.finish()
+        img = await buf.toBuffer()
       }
       // Force set to make sure the token logo live longer than the token metadata
       await this.cache.set(`logo:${mintAddress}`, img)
