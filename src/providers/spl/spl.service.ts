@@ -56,7 +56,7 @@ export class SplService {
         mints.map((e) => this.recursiveMintByAddress(e.toBase58())),
       )
       const symbol = atomicMints.length
-        ? atomicMints.map(({ symbol }) => symbol).join('|')
+        ? atomicMints.map(({ symbol }) => symbol).join(' • ')
         : mintAddress.substring(0, 6)
       const mint = {
         address: mintAddress,
