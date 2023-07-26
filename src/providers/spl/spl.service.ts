@@ -67,6 +67,7 @@ export class SplService {
               }),
             ),
           )
+          .sharpen()
           .webp()
           .toBuffer())
       await this.cache.set(`logo:${mintAddress}`, img) // Force set to make sure the token logo live longer than the token metadata
