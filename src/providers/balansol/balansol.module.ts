@@ -1,14 +1,14 @@
 import { DynamicModule, Module } from '@nestjs/common'
-import { SplServiceFactory } from './spl.service'
+import { BalansolService } from './balansol.service'
 
 @Module({
-  providers: [SplServiceFactory],
-  exports: [SplServiceFactory],
+  providers: [BalansolService],
+  exports: [BalansolService],
 })
-export class SplModule {
+export class BalansolModule {
   static forRoot({ isGlobal = false }: { isGlobal?: boolean }): DynamicModule {
     return {
-      module: SplModule,
+      module: BalansolModule,
       global: isGlobal,
     }
   }

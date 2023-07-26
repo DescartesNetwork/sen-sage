@@ -18,10 +18,8 @@ const configuration = () => ({
     limit: env === 'development' ? 3 : 10,
   },
   solana: {
-    cluster:
-      env === 'development'
-        ? 'https://ssc-dao.genesysgo.net/'
-        : 'https://sparkling-compatible-telescope.solana-mainnet.quiknode.pro/7585a9ee75601c03a2815eeb8a018c05fa10e736/',
+    cluster: process.env.RPC || '',
+    balansol: 'D3BBjqUdCYuP18fNvvMbPAZ8DpcRi4io2EsYHQawJDag',
   },
   schedule: {
     jupag:
