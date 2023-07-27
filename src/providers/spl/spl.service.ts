@@ -122,18 +122,22 @@ export class SplService {
       const atomicMints = await Promise.all<MintMetadata>(
         mints.map((e) => this.recursiveMintByAddress(e.toBase58())),
       )
-      const symbol = atomicMints.map(({ symbol }) => symbol).join(' • ')
-      const logoURI = await this.constructLogoUri(
-        atomicMints.map(({ logoURI }) => logoURI),
-        { mintAddress },
-      )
+      const symbol = `Σ(${
+        atomicMints.map(({ symbol }) => symbol).join(', ') ||
+        mintAddress.substring(0, 6)
+      })`
+      const logoURI =
+        (await this.constructLogoUri(
+          atomicMints.map(({ logoURI }) => logoURI),
+          { mintAddress },
+        )) || ''
       const mint = {
         address: mintAddress,
         chainId: 101,
         decimals: decimals,
         name: 'SenSwap LP Token',
-        symbol: symbol || mintAddress.substring(0, 6),
-        logoURI: logoURI || '',
+        symbol,
+        logoURI,
         tags: ['spl'],
         extensions: {},
       }
