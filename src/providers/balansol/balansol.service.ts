@@ -9,11 +9,14 @@ import BN from 'bn.js'
 import { undecimalize } from 'helpers/decimals'
 import { MintMetadata } from 'providers/jupag/jupag.service'
 import { SplService } from 'providers/spl/spl.service'
+import { CACHE_MANAGER } from '@nestjs/cache-manager'
+import { Cache } from 'cache-manager'
 
 @Injectable()
 export class BalansolService extends Program<BalancerAmm> {
   constructor(
     private readonly config: ConfigService<EnvironmentVariables>,
+    @Inject(CACHE_MANAGER) private cache: Cache,
     @Inject(forwardRef(() => SplService))
     private readonly spl: SplService,
   ) {
@@ -75,6 +78,8 @@ export class BalansolService extends Program<BalancerAmm> {
    */
   async getPriceByLpAddress(lpAddress: string) {
     try {
+      const local = await this.cache.get(`price:${lpAddress}`)
+      if (local) return local
       const {
         account: { mints, weights, reserves },
       } = await this.getPoolByLpAddress(lpAddress)
@@ -100,6 +105,8 @@ export class BalansolService extends Program<BalancerAmm> {
       const lpAmount = Number(undecimalize(lpSupply, lpDecimals))
 
       const price = lpAmount ? tvl / lpAmount : undefined
+      if (price)
+        await this.cache.set(`price:${lpAddress}`, price, 60 * 60 * 1000)
       return price
     } catch (er) {
       return undefined

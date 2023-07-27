@@ -34,11 +34,13 @@ export class JupagService {
         'https://token.jup.ag/all',
       )
       if (data)
-        data.forEach((mint) =>
-          this.cache.set(
-            `metadata:${mint.address}`,
-            mint,
-            7 * 24 * 60 * 60 * 1000,
+        await Promise.all(
+          data.map((mint) =>
+            this.cache.set(
+              `metadata:${mint.address}`,
+              mint,
+              7 * 24 * 60 * 60 * 1000,
+            ),
           ),
         )
       return data.find(({ address }) => address === mintAddress)
