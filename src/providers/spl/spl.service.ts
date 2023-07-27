@@ -1,7 +1,7 @@
 import { AnchorProvider, Program, Wallet } from '@coral-xyz/anchor'
 import { splTokenProgram } from '@coral-xyz/spl-token'
 import { CACHE_MANAGER } from '@nestjs/cache-manager'
-import { Inject, Injectable } from '@nestjs/common'
+import { Inject, Injectable, forwardRef } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { Connection, Keypair } from '@solana/web3.js'
 import { BalansolService } from 'providers/balansol/balansol.service'
@@ -26,6 +26,7 @@ export class SplService {
   constructor(
     @Inject(CACHE_MANAGER) private cache: Cache,
     private readonly config: ConfigService,
+    @Inject(forwardRef(() => BalansolService))
     private readonly balansol: BalansolService,
   ) {
     this.program = splTokenProgram({

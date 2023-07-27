@@ -2,15 +2,21 @@ import { AnchorProvider, Program, Wallet } from '@coral-xyz/anchor'
 import { BalancerAmm, IDL } from './balansol.abi'
 import { Connection, Keypair } from '@solana/web3.js'
 import configuration, { EnvironmentVariables } from 'config/configuration'
-import { Injectable } from '@nestjs/common'
+import { Inject, Injectable, forwardRef } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import axios from 'axios'
 import BN from 'bn.js'
-import { decimalize, undecimalize } from 'helpers/decimals'
+import { undecimalize } from 'helpers/decimals'
+import { MintMetadata } from 'providers/jupag/jupag.service'
+import { SplService } from 'providers/spl/spl.service'
 
 @Injectable()
 export class BalansolService extends Program<BalancerAmm> {
-  constructor(readonly config: ConfigService<EnvironmentVariables>) {
+  constructor(
+    private readonly config: ConfigService<EnvironmentVariables>,
+    @Inject(forwardRef(() => SplService))
+    private readonly spl: SplService,
+  ) {
     super(
       IDL,
       configuration().solana.balansol,
@@ -22,11 +28,20 @@ export class BalansolService extends Program<BalancerAmm> {
     )
   }
 
-  private async recursiveMintByAddress(mintAddress: string) {
-    const { data: price } = await axios.get(
+  private async recursiveMintPriceByAddress(mintAddress: string) {
+    const { data: price } = await axios.get<number>(
       `http://localhost:${this.config.get('server.port', {
         infer: true,
       })}/price/${mintAddress}`,
+    )
+    return price
+  }
+
+  private async recursiveMintMetadataByAddress(mintAddress: string) {
+    const { data: price } = await axios.get<MintMetadata>(
+      `http://localhost:${this.config.get('server.port', {
+        infer: true,
+      })}/metadata/${mintAddress}`,
     )
     return price
   }
@@ -61,17 +76,31 @@ export class BalansolService extends Program<BalancerAmm> {
   async getPriceByLpAddress(lpAddress: string) {
     try {
       const {
-        account: { mints, weights },
+        account: { mints, weights, reserves },
       } = await this.getPoolByLpAddress(lpAddress)
-      const precision = 18
-      const prices = await Promise.all(
-        mints.map((mint) => this.recursiveMintByAddress(mint.toBase58())),
+
+      const amountBasedOnFirstMint = reserves.reduce(
+        (a, b, i) =>
+          a.add(
+            reserves[0].mul(weights[i]).div(reserves[i]).div(weights[0]).mul(b),
+          ),
+        new BN(0),
       )
-      const _prices = prices.map((price) => decimalize(price, precision))
-      const price = _prices
-        .reduce((a, b, i) => b.mul(weights[i]).add(a), new BN(0))
-        .div(weights.reduce((a, b) => a.add(b), new BN(0)))
-      return Number(undecimalize(price, precision))
+      const firstMintPrice = await this.recursiveMintPriceByAddress(
+        mints[0].toBase58(),
+      )
+      const { decimals: firstMintDecimals } =
+        await this.recursiveMintMetadataByAddress(mints[0].toBase58())
+      const tvl =
+        Number(undecimalize(amountBasedOnFirstMint, firstMintDecimals)) *
+        firstMintPrice
+
+      const { supply: lpSupply, decimals: lpDecimals } =
+        await this.spl.program.account.mint.fetch(lpAddress)
+      const lpAmount = Number(undecimalize(lpSupply, lpDecimals))
+
+      const price = lpAmount ? tvl / lpAmount : undefined
+      return price
     } catch (er) {
       return undefined
     }
