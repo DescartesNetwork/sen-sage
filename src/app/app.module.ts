@@ -3,8 +3,7 @@ import { ConfigModule } from '@nestjs/config'
 import { ScheduleModule } from '@nestjs/schedule'
 import { ThrottlerModule } from '@nestjs/throttler'
 import { CacheModule } from '@nestjs/cache-manager'
-import fsStore from 'cache-manager-fs-hash'
-import { ThrottlerConfigService } from './app.service'
+import { CacheConfigService, ThrottlerConfigService } from './app.service'
 import { MplModule } from 'providers/mpl/mpl.module'
 import { SplModule } from 'providers/spl/spl.module'
 import { BalansolModule } from 'providers/balansol/balansol.module'
@@ -19,13 +18,7 @@ import configuration from 'config/configuration'
   imports: [
     ConfigModule.forRoot({ isGlobal: true, load: [configuration] }),
     ThrottlerModule.forRootAsync({ useClass: ThrottlerConfigService }),
-    CacheModule.register({
-      isGlobal: true,
-      store: fsStore,
-      max: 1000,
-      path: 'cache',
-      zip: true,
-    }),
+    CacheModule.registerAsync({ isGlobal: true, useClass: CacheConfigService }),
     ScheduleModule.forRoot(),
     MplModule.forRoot({ isGlobal: true }),
     SplModule.forRoot({ isGlobal: true }),
