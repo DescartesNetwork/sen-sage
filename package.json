@@ -11,7 +11,7 @@
   "scripts": {
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
-    "start": "concurrently --names LINT,DEV -c yellow,cyan \"yarn lint\" \"yarn start:dev\"",
+    "start": "concurrently --names LINT,DEV -c yellow,cyan \"pnpm lint\" \"pnpm start:dev\"",
     "start:dev": "NODE_ENV=development nest start --watch",
     "start:debug": "NODE_ENV=development nest start --debug --watch",
     "start:prod": "NODE_ENV=production node dist/main",
