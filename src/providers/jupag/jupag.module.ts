@@ -1,9 +1,8 @@
 import { DynamicModule, Module } from '@nestjs/common'
 import { JupagService } from './jupag.service'
-import { CacheModule } from '@nestjs/cache-manager'
 
 @Module({
-  imports: [CacheModule.register({ isGlobal: true, max: 100000 })],
+  imports: [],
   providers: [JupagService],
   exports: [JupagService],
 })

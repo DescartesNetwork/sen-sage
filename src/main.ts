@@ -35,11 +35,11 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config)
   SwaggerModule.setup('docs', app, document)
   // Start
-  const PORT = configuration().server.port
-  const IP = configuration().server.ip
+  const { port: PORT, ip: IP } = configuration().server
   await app.listen(PORT)
   console.info(
     `⚡️[server]: Server is running at http://localhost:${PORT} or http://${IP}:${PORT}`,
   )
 }
+
 bootstrap()

@@ -8,6 +8,8 @@ import { MintMetadata } from 'providers/jupag/jupag.service'
 
 @Injectable()
 export class MplService extends Metaplex {
+  private readonly cacheTTL: number = 24 * 60 * 60 * 1000
+
   constructor(@Inject(CACHE_MANAGER) private cache: Cache) {
     super(new Connection(configuration().solana.cluster, 'confirmed'))
   }
@@ -41,7 +43,7 @@ export class MplService extends Metaplex {
         tags: ['metaplex', 'sft'],
         extensions: {},
       }
-      await this.cache.set(`metadata:${mintAddress}`, mint)
+      await this.cache.set(`metadata:${mintAddress}`, mint, this.cacheTTL)
       return mint
     } catch (er) {
       return undefined

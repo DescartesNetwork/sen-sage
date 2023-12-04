@@ -19,6 +19,8 @@ export type MintMetadata = {
 
 @Injectable()
 export class JupagService {
+  private readonly cacheTTL: number = 60 * 60 * 1000
+
   constructor(@Inject(CACHE_MANAGER) private cache: Cache) {}
 
   /**
@@ -69,7 +71,7 @@ export class JupagService {
         timeTake: number
       }>(`https://price.jup.ag/v4/price?ids=${mintAddress}`)
       if (price !== undefined)
-        this.cache.set(`price:${mintAddress}`, price, 60 * 60 * 1000)
+        this.cache.set(`price:${mintAddress}`, price, this.cacheTTL)
       return price
     } catch (er) {
       return undefined

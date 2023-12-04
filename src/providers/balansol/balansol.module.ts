@@ -1,9 +1,8 @@
 import { DynamicModule, Module } from '@nestjs/common'
 import { BalansolService } from './balansol.service'
-import { CacheModule } from '@nestjs/cache-manager'
 
 @Module({
-  imports: [CacheModule.register({ isGlobal: true, max: 100000 })],
+  imports: [],
   providers: [BalansolService],
   exports: [BalansolService],
 })

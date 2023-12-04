@@ -1,15 +1,8 @@
 import { DynamicModule, Module } from '@nestjs/common'
 import { MplService } from './mpl.service'
-import { CacheModule } from '@nestjs/cache-manager'
 
 @Module({
-  imports: [
-    CacheModule.register({
-      isGlobal: true,
-      ttl: 24 * 60 * 60 * 1000,
-      max: 100000,
-    }),
-  ],
+  imports: [],
   providers: [MplService],
   exports: [MplService],
 })

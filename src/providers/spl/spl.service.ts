@@ -22,6 +22,7 @@ const FRAME: Create = {
 @Injectable()
 export class SplService {
   public readonly program: Program<SplToken>
+  private readonly cacheTTL: number = 24 * 60 * 60 * 1000
 
   constructor(
     @Inject(CACHE_MANAGER) private cache: Cache,
@@ -84,7 +85,7 @@ export class SplService {
         img = await buf.toBuffer()
       }
       // Force set to make sure the token logo live longer than the token metadata
-      await this.cache.set(`logo:${mintAddress}`, img)
+      await this.cache.set(`logo:${mintAddress}`, img, this.cacheTTL)
       return logoURI
     } catch (er) {
       return undefined
@@ -142,7 +143,7 @@ export class SplService {
         tags: ['spl'],
         extensions: {},
       }
-      await this.cache.set(`metadata:${mintAddress}`, mint)
+      await this.cache.set(`metadata:${mintAddress}`, mint, this.cacheTTL)
       return mint
     } catch (er) {
       return undefined
