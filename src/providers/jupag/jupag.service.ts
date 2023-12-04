@@ -35,17 +35,10 @@ export class JupagService {
       const { data } = await axios.get<MintMetadata[]>(
         'https://token.jup.ag/all',
       )
-      if (data)
-        await Promise.all(
-          data.map((mint) =>
-            this.cache.set(
-              `metadata:${mint.address}`,
-              mint,
-              7 * 24 * 60 * 60 * 1000,
-            ),
-          ),
-        )
-      return data.find(({ address }) => address === mintAddress)
+      if (!data) return undefined
+      const mint = data.find(({ address }) => address === mintAddress)
+      this.cache.set(`metadata:${mint.address}`, mint, 7 * 24 * 60 * 60 * 1000)
+      return mint
     } catch (er) {
       return undefined
     }

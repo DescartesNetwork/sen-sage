@@ -34,7 +34,6 @@ export class CacheConfigService implements CacheOptionsFactory {
       store: fsStore,
       max: this.config.get('cache.items', { infer: true }),
       path: this.config.get('cache.path', { infer: true }),
-      zip: true,
     }
   }
 }
