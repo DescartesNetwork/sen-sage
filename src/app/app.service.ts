@@ -12,10 +12,16 @@ export class ThrottlerConfigService implements ThrottlerOptionsFactory {
   @Inject(ConfigService)
   private readonly config: ConfigService
   public createThrottlerOptions(): ThrottlerModuleOptions {
-    return {
-      ttl: this.config.get('throttler.ttl', { infer: true }),
-      limit: this.config.get('throttler.limit', { infer: true }),
-    }
+    return [
+      {
+        ttl: this.config.get('throttler.ttl', {
+          infer: true,
+        }),
+        limit: this.config.get('throttler.limit', {
+          infer: true,
+        }),
+      },
+    ]
   }
 }
 

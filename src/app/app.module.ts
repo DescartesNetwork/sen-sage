@@ -1,6 +1,5 @@
 import { Module } from '@nestjs/common'
 import { ConfigModule } from '@nestjs/config'
-import { ScheduleModule } from '@nestjs/schedule'
 import { ThrottlerModule } from '@nestjs/throttler'
 import { CacheModule } from '@nestjs/cache-manager'
 import { CacheConfigService, ThrottlerConfigService } from './app.service'
@@ -19,7 +18,6 @@ import configuration from 'config/configuration'
     ConfigModule.forRoot({ isGlobal: true, load: [configuration] }),
     ThrottlerModule.forRootAsync({ useClass: ThrottlerConfigService }),
     CacheModule.registerAsync({ isGlobal: true, useClass: CacheConfigService }),
-    ScheduleModule.forRoot(),
     MplModule.forRoot({ isGlobal: true }),
     SplModule.forRoot({ isGlobal: true }),
     BalansolModule.forRoot({ isGlobal: true }),
