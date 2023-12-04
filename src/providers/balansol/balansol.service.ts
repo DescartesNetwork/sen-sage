@@ -78,9 +78,11 @@ export class BalansolService extends Program<BalancerAmm> {
    * @param lpAddress LP address
    * @returns Price
    */
-  async getPriceByLpAddress(lpAddress: string) {
+  async getPriceByLpAddress(lpAddress: string): Promise<number | undefined> {
     try {
-      const local = await this.cache.get(`price:${lpAddress}`)
+      const local = await this.cache.get<number | undefined>(
+        `price:${lpAddress}`,
+      )
       if (local) return local
       const {
         account: { mints, weights, reserves },

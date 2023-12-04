@@ -28,9 +28,13 @@ export class JupagService {
    * @param mintAddress Mint address
    * @returns Mint
    */
-  async getMintByAddress(mintAddress: string) {
+  async getMintByAddress(
+    mintAddress: string,
+  ): Promise<MintMetadata | undefined> {
     try {
-      const local = await this.cache.get(`metadata:${mintAddress}`)
+      const local = await this.cache.get<MintMetadata | undefined>(
+        `metadata:${mintAddress}`,
+      )
       if (local) return local
       const { data } = await axios.get<MintMetadata[]>(
         'https://token.jup.ag/all',
@@ -49,9 +53,13 @@ export class JupagService {
    * @param mintAddress Mint address
    * @returns Price
    */
-  async getPriceByMintAddress(mintAddress: string) {
+  async getPriceByMintAddress(
+    mintAddress: string,
+  ): Promise<number | undefined> {
     try {
-      const local = await this.cache.get(`price:${mintAddress}`)
+      const local = await this.cache.get<number | undefined>(
+        `price:${mintAddress}`,
+      )
       if (local) return local
       const {
         data: {

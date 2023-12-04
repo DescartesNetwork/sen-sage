@@ -37,6 +37,7 @@
     "@nestjs/platform-express": "^9.0.0",
     "@nestjs/swagger": "^7.1.2",
     "@nestjs/throttler": "^5.0.1",
+    "@solana/spl-token-registry": "^0.2.4574",
     "@solana/web3.js": "^1.78.0",
     "@types/cache-manager-fs-hash": "^0.0.4",
     "axios": "^1.4.0",

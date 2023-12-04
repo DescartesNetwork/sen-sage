@@ -53,23 +53,22 @@ export class SplService {
     { mintAddress }: { mintAddress: string },
   ) {
     try {
-      const logoURI = `${this.config.get('server.host', {
-        infer: true,
-      })}/logo/${mintAddress}.webp`
       let img = await this.cache.get<Buffer>(`logo:${mintAddress}`)
       if (!img) {
         const frames: any[] = await Promise.all(
           logoURIs.map(async (url) => {
-            const { data } = await axios.get<Buffer>(url, {
-              responseType: 'arraybuffer',
-            })
-            const input = await sharp(data)
-              .resize(FRAME.width, FRAME.height)
-              .toBuffer()
-            const buf = await sharp({ create: FRAME })
-              .composite([{ input }])
-              .raw()
-              .toBuffer()
+            const frame = sharp({ create: FRAME })
+            const { data } =
+              (url &&
+                (await axios.get<Buffer>(url, {
+                  responseType: 'arraybuffer',
+                }))) ||
+              {}
+            const input =
+              data &&
+              (await sharp(data).resize(FRAME.width, FRAME.height).toBuffer())
+            if (input) frame.composite([{ input }])
+            const buf = await frame.raw().toBuffer()
             return buf
           }),
         )
@@ -86,7 +85,9 @@ export class SplService {
       }
       // Force set to make sure the token logo live longer than the token metadata
       await this.cache.set(`logo:${mintAddress}`, img, this.cacheTTL)
-      return logoURI
+      return `${this.config.get('server.host', {
+        infer: true,
+      })}/logo/${mintAddress}.webp`
     } catch (er) {
       return undefined
     }
@@ -97,7 +98,9 @@ export class SplService {
    * @param mintAddress Mint address
    * @returns Image buffer
    */
-  async getImageByMintAddress(mintAddress: string) {
+  async getImageByMintAddress(
+    mintAddress: string,
+  ): Promise<Buffer | undefined> {
     try {
       const img = await this.cache.get<Buffer>(`logo:${mintAddress}`)
       return img
@@ -111,16 +114,34 @@ export class SplService {
    * @param mintAddress Mint address
    * @returns Mint
    */
-  async getMintByAddress(mintAddress: string) {
+  async getMintByAddress(
+    mintAddress: string,
+  ): Promise<MintMetadata | undefined> {
     try {
-      const local = await this.cache.get<MintMetadata>(
+      const local = await this.cache.get<MintMetadata | undefined>(
         `metadata:${mintAddress}`,
       )
       if (local) return local
       const { decimals } = await this.program.account.mint.fetch(mintAddress)
+      const pool = await this.balansol.getPoolByLpAddress(mintAddress)
+
+      // Not the LP token
+      if (!pool) {
+        return {
+          address: mintAddress,
+          chainId: 101,
+          symbol: '---',
+          name: 'Unknown Token',
+          logoURI: '',
+          decimals: 9,
+          tags: [],
+          extensions: {},
+        }
+      }
+
       const {
         account: { mints },
-      } = await this.balansol.getPoolByLpAddress(mintAddress)
+      } = pool
       const atomicMints = await Promise.all<MintMetadata>(
         mints.map((e) => this.recursiveMintByAddress(e.toBase58())),
       )
@@ -133,7 +154,7 @@ export class SplService {
           atomicMints.map(({ logoURI }) => logoURI),
           { mintAddress },
         )) || ''
-      const mint = {
+      const mint: MintMetadata = {
         address: mintAddress,
         chainId: 101,
         decimals: decimals,

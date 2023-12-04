@@ -19,7 +19,9 @@ export class MplService extends Metaplex {
    * @param mintAddress Mint address
    * @returns Mint
    */
-  async getMintByAddress(mintAddress: string) {
+  async getMintByAddress(
+    mintAddress: string,
+  ): Promise<MintMetadata | undefined> {
     try {
       const local = await this.cache.get<MintMetadata>(
         `metadata:${mintAddress}`,
@@ -33,7 +35,7 @@ export class MplService extends Metaplex {
       } = await this.nfts().findByMint({
         mintAddress: new PublicKey(mintAddress),
       })
-      const mint = {
+      const mint: MintMetadata = {
         address: mintAddress,
         chainId: 101,
         decimals,
