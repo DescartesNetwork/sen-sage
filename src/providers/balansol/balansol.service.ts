@@ -14,7 +14,7 @@ import { Cache } from 'cache-manager'
 
 @Injectable()
 export class BalansolService extends Program<BalancerAmm> {
-  private readonly cacheTTL: number = 60 * 60 * 1000
+  private readonly cacheTTL: number = 60 * 60
 
   constructor(
     private readonly config: ConfigService<EnvironmentVariables>,
@@ -110,7 +110,9 @@ export class BalansolService extends Program<BalancerAmm> {
 
       const price = lpAmount ? tvl / lpAmount : undefined
       if (price)
-        await this.cache.set(`price:${lpAddress}`, price, this.cacheTTL)
+        await this.cache.set(`price:${lpAddress}`, price, {
+          ttl: this.cacheTTL,
+        })
       return price
     } catch (er) {
       return undefined

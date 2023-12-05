@@ -24,7 +24,7 @@ const WRAPPED_SOL_ADDRESS = 'So11111111111111111111111111111111111111112'
 @Injectable()
 export class LegacyService {
   private registry: TokenInfo[]
-  private readonly cacheTTL: number = 60 * 60 * 1000
+  private readonly cacheTTL: number = 60 * 60
 
   constructor(@Inject(CACHE_MANAGER) private cache: Cache) {}
 
@@ -87,7 +87,7 @@ export class LegacyService {
       )
       const price = data?.[coingeckoId]?.usd
       if (price !== undefined)
-        this.cache.set(`price:${mintAddress}`, price, this.cacheTTL)
+        this.cache.set(`price:${mintAddress}`, price, { ttl: this.cacheTTL })
       return price
     } catch (er) {
       return undefined
