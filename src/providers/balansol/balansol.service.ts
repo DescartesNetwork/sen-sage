@@ -1,6 +1,6 @@
 import { AnchorProvider, Program, Wallet } from '@coral-xyz/anchor'
 import { BalancerAmm, IDL } from './balansol.abi'
-import { Connection, Keypair } from '@solana/web3.js'
+import { Keypair } from '@solana/web3.js'
 import configuration, { EnvironmentVariables } from 'config/configuration'
 import { Inject, Injectable, forwardRef } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
@@ -11,6 +11,7 @@ import { MintMetadata } from 'providers/jupag/jupag.service'
 import { SplService } from 'providers/spl/spl.service'
 import { CACHE_MANAGER } from '@nestjs/cache-manager'
 import { Cache } from 'cache-manager'
+import { connection } from 'helpers/connection'
 
 @Injectable()
 export class BalansolService extends Program<BalancerAmm> {
@@ -26,7 +27,11 @@ export class BalansolService extends Program<BalancerAmm> {
       IDL,
       configuration().solana.balansol,
       new AnchorProvider(
-        new Connection(config.get('solana.cluster', { infer: true })),
+        connection(
+          config.get('solana.ankr', {
+            infer: true,
+          }),
+        ),
         new Wallet(new Keypair()),
         { commitment: 'confirmed' },
       ),

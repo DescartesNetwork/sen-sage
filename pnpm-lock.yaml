@@ -44,9 +44,6 @@ dependencies:
   '@solana/web3.js':
     specifier: ^1.78.0
     version: 1.87.6
-  '@types/cache-manager':
-    specifier: ^4.0.6
-    version: 4.0.6
   axios:
     specifier: ^1.4.0
     version: 1.6.2(debug@4.3.4)
@@ -100,6 +97,9 @@ devDependencies:
   '@types/bn.js':
     specifier: ^5.1.1
     version: 5.1.5
+  '@types/cache-manager':
+    specifier: ^4.0.6
+    version: 4.0.6
   '@types/cache-manager-fs-hash':
     specifier: ^0.0.4
     version: 0.0.4
@@ -2404,6 +2404,7 @@ packages:
 
   /@types/cache-manager@4.0.6:
     resolution: {integrity: sha512-8qL93MF05/xrzFm/LSPtzNEOE1eQF3VwGHAcQEylgp5hDSTe41jtFwbSYAPfyYcVa28y1vYSjIt0c1fLLUiC/Q==}
+    dev: true
 
   /@types/connect@3.4.38:
     resolution: {integrity: sha512-K6uROf1LD88uDQqJCktA4yzL1YYAK6NgfsI0v/mTgyPKWsX1CnJ0XPSDhViejru1GcRkLWb8RlzFYJRqGUbaug==}

@@ -3,7 +3,7 @@ import { splTokenProgram } from '@coral-xyz/spl-token'
 import { CACHE_MANAGER } from '@nestjs/cache-manager'
 import { Inject, Injectable, forwardRef } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
-import { Connection, Keypair } from '@solana/web3.js'
+import { Keypair } from '@solana/web3.js'
 import { BalansolService } from 'providers/balansol/balansol.service'
 import { MintMetadata } from 'providers/jupag/jupag.service'
 import { Cache } from 'cache-manager'
@@ -11,6 +11,7 @@ import { SplToken } from './spl.abi'
 import axios from 'axios'
 import sharp, { Create } from 'sharp'
 import GIFEncoder from 'gifencoder'
+import { connection } from 'helpers/connection'
 
 const FRAME: Create = {
   width: 48,
@@ -32,7 +33,7 @@ export class SplService {
   ) {
     this.program = splTokenProgram({
       provider: new AnchorProvider(
-        new Connection(config.get('solana.cluster', { infer: true })),
+        connection(config.get('solana.ankr', { infer: true })),
         new Wallet(new Keypair()),
         { commitment: 'confirmed' },
       ),

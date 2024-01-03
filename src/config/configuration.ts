@@ -15,8 +15,8 @@ const configuration = () => ({
     limit: 10,
   },
   solana: {
-    cluster: process.env.RPC || '',
     balansol: 'D3BBjqUdCYuP18fNvvMbPAZ8DpcRi4io2EsYHQawJDag',
+    ankr: process.env.ANKR_TOKEN || '',
   },
   cache: {
     items: 100000,

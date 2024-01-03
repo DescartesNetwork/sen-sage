@@ -1,9 +1,10 @@
 import { Metaplex } from '@metaplex-foundation/js'
 import { CACHE_MANAGER } from '@nestjs/cache-manager'
 import { Inject, Injectable } from '@nestjs/common'
-import { Connection, PublicKey } from '@solana/web3.js'
+import { PublicKey } from '@solana/web3.js'
 import { Cache } from 'cache-manager'
 import configuration from 'config/configuration'
+import { connection } from 'helpers/connection'
 import { MintMetadata } from 'providers/jupag/jupag.service'
 
 @Injectable()
@@ -11,7 +12,7 @@ export class MplService extends Metaplex {
   private readonly cacheTTL: number = 24 * 60 * 60
 
   constructor(@Inject(CACHE_MANAGER) private cache: Cache) {
-    super(new Connection(configuration().solana.cluster, 'confirmed'))
+    super(connection(configuration().solana.ankr))
   }
 
   /**
