@@ -13,7 +13,11 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule)
   // Middleware
   app.enableCors({
-    origin: [/^(http)[s]?:\/\/(localhost)(:[0-9]+)$/, /sentre\.io$/],
+    origin: [
+      /^(http)[s]?:\/\/(localhost)(:[0-9]+)$/,
+      /sentre\.io$/,
+      /sentre-app\.pages\.dev$/,
+    ],
     credentials: true,
   })
   app.use(cookieParser())
