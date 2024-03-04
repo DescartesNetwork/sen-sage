@@ -16,7 +16,7 @@ const configuration = () => ({
   },
   solana: {
     balansol: 'D3BBjqUdCYuP18fNvvMbPAZ8DpcRi4io2EsYHQawJDag',
-    ankr: process.env.ANKR_TOKEN || '',
+    heliusApiToken: process.env.HELIUS_API_KEY || '',
   },
   cache: {
     items: 100000,

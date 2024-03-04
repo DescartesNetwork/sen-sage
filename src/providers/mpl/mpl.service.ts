@@ -12,7 +12,7 @@ export class MplService extends Metaplex {
   private readonly cacheTTL: number = 24 * 60 * 60
 
   constructor(@Inject(CACHE_MANAGER) private cache: Cache) {
-    super(connection(configuration().solana.ankr))
+    super(connection(configuration().solana.heliusApiToken))
   }
 
   /**

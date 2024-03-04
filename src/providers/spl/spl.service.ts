@@ -33,7 +33,7 @@ export class SplService {
   ) {
     this.program = splTokenProgram({
       provider: new AnchorProvider(
-        connection(config.get('solana.ankr', { infer: true })),
+        connection(config.get('solana.heliusApiToken', { infer: true })),
         new Wallet(new Keypair()),
         { commitment: 'confirmed' },
       ),

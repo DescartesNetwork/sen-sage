@@ -1,6 +1,4 @@
 import { Connection } from '@solana/web3.js'
 
-export const connection = (ankr: string) =>
-  new Connection(`https://rpc.ankr.com/solana/${ankr}`, {
-    wsEndpoint: `https://rpc.ankr.com/solana/ws/${ankr}`,
-  })
+export const connection = (heliusApiToken: string) =>
+  new Connection(`https://mainnet.helius-rpc.com/?api-key=${heliusApiToken}`)

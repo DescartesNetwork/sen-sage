@@ -28,7 +28,7 @@ export class BalansolService extends Program<BalancerAmm> {
       configuration().solana.balansol,
       new AnchorProvider(
         connection(
-          config.get('solana.ankr', {
+          config.get('solana.heliusApiToken', {
             infer: true,
           }),
         ),
