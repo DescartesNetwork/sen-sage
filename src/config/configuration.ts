@@ -1,7 +1,9 @@
 import ip from 'ip'
+import { makeDirectorySync } from 'make-dir'
 
 const env = process.env.NODE_ENV || 'development'
-const isDev = env === 'development'
+const cache = makeDirectorySync('cache')
+console.log('========================', cache)
 
 const configuration = () => ({
   server: {
@@ -20,7 +22,7 @@ const configuration = () => ({
   },
   cache: {
     items: 100000,
-    path: isDev ? 'cache' : '/var/cache',
+    path: cache,
   },
 })
 
