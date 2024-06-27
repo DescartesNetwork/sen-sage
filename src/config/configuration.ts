@@ -20,7 +20,7 @@ const configuration = () => ({
   },
   cache: {
     items: 100000,
-    path: isDev ? 'cache' : '/var/data/cache',
+    path: isDev ? 'cache' : '/var/cache',
   },
 })
 
