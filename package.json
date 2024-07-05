@@ -42,6 +42,7 @@
     "@solana/web3.js": "^1.78.0",
     "axios": "^1.4.0",
     "bn.js": "^5.2.1",
+    "bs58": "^6.0.0",
     "buffer-xor": "^2.0.2",
     "cache-manager": "^4.1.0",
     "cache-manager-fs-hash": "^1.0.0",
@@ -53,7 +54,8 @@
     "morgan": "^1.10.0",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.2.0",
-    "sharp": "^0.33.0"
+    "sharp": "^0.33.0",
+    "tweetnacl": "^1.0.3"
   },
   "devDependencies": {
     "@nestjs/cli": "^9.0.0",

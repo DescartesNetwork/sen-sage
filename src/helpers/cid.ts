@@ -1,5 +1,5 @@
 import xor from 'buffer-xor'
-import bs58, { decode, encode } from 'bs58'
+import bs58 from 'bs58'
 import { extname } from 'path'
 import { hash } from 'tweetnacl'
 
@@ -25,7 +25,7 @@ const encodeExtension = (file: Express.Multer.File) => {
 }
 
 const decodeExtension = (cid: string) => {
-  const buf = decode(cid)
+  const buf = bs58.decode(cid)
   let ext = Buffer.from(
     buf.subarray(CONTENT_LENGTH, CONTENT_LENGTH + EXTENSION_LENGTH),
   ).toString('utf8')
@@ -42,8 +42,8 @@ export const toCID = (file: Express.Multer.File) => {
 
 export const toFilename = (cid: string) => {
   const extension = decodeExtension(cid)
-  const content = Buffer.from(decode(cid).subarray(0, CONTENT_LENGTH))
-  return `${encode(content)}.${extension}`
+  const content = Buffer.from(bs58.decode(cid).subarray(0, CONTENT_LENGTH))
+  return `${bs58.encode(content)}.${extension}`
 }
 
 export type S3Info = {
