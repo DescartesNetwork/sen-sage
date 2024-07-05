@@ -21,6 +21,13 @@ const configuration = () => ({
     items: 100000,
     path: 'cache',
   },
+  storage: {
+    maxSize: 5000000, // 5MB
+    region: 'us-west-2',
+    bucket: 'sen-storage',
+    accessKeyId: process.env.AWS_S3_ACCESS_KEY_ID || '',
+    secretAccessKey: process.env.AWS_S3_SECRET_ACCESS_KEY || '',
+  },
 })
 
 export type EnvironmentVariables = ReturnType<typeof configuration>

@@ -14,6 +14,7 @@ import { HealthModule } from './health/health.module'
 import { MetadataModule } from './metadata/metadata.module'
 import { PriceModule } from './price/price.module'
 import { LogoModule } from './logo/logo.module'
+import { StorageModule } from './storage/storage.module'
 
 import configuration from 'config/configuration'
 
@@ -32,6 +33,7 @@ import configuration from 'config/configuration'
     PriceModule,
     BalansolModule,
     LogoModule,
+    StorageModule,
   ],
   controllers: [],
   providers: [],
