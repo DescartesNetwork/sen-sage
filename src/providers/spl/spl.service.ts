@@ -90,6 +90,8 @@ export class SplService {
       })
       return `${this.config.get('server.host', {
         infer: true,
+      })}/${this.config.get('server.post', {
+        infer: true,
       })}/logo/${mintAddress}.webp`
     } catch (er) {
       return undefined

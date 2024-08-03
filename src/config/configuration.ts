@@ -1,12 +1,9 @@
-import ip from 'ip'
-
 const env = process.env.NODE_ENV || 'development'
 
 const configuration = () => ({
   server: {
     env,
     port: parseInt(process.env.PORT, 10) || 10000,
-    ip: ip.address(),
     host: process.env.HOST || '',
   },
   throttler: {

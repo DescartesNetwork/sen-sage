@@ -20,6 +20,7 @@ RUN pnpm prune --prod
 # ===============================
 FROM base as runner
 ENV NODE_ENV production
+ENV HOST 0.0.0.0
 ENV PORT 3000
 # Get source
 COPY --from=build /app /app
