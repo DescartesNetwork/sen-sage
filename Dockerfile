@@ -1,12 +1,12 @@
 FROM node:20.12.0-slim as base
+WORKDIR /app
+RUN npm install -g pnpm@8.15.6
 
 # ===============================
 # Builder
 # ===============================
 FROM base as build
-WORKDIR /app
 # Install deps
-RUN npm install -g pnpm@8.15.6
 COPY package.json pnpm-lock.yaml ./
 RUN pnpm install --frozen-lockfile
 # Build source
@@ -19,8 +19,8 @@ RUN pnpm prune --prod
 # Runner
 # ===============================
 FROM base as runner
-WORKDIR /app
 ENV NODE_ENV production
+ENV PORT 3000
 # Get source
 COPY --from=build /app /app
 # Config workspace
