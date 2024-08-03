@@ -7,7 +7,7 @@ app = 'sen-sage'
 primary_region = 'hkg'
 
 [mounts]
-source = "data"
+source = "sen_sage_vol"
 destination = "/data"
 
 [http_service]

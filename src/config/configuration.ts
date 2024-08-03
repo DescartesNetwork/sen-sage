@@ -19,7 +19,7 @@ const configuration = () => ({
   },
   cache: {
     items: 100000,
-    path: env === 'development' ? 'cache' : '/data/cache',
+    path: process.env.CACHE,
   },
   storage: {
     maxSize: 5000000, // 5MB
